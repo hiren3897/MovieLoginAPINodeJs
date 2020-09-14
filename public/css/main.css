@@ -1,0 +1,98 @@
+
+* {
+    margin: 0;
+    padding: 0; }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit; }
+  
+  html {
+    box-sizing: border-box;
+    font-size: 62.5%; }
+    @media only screen and (max-width: 68.75em) {
+      html {
+        font-size: 50%; } }
+  
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #655A56;
+    background-image: linear-gradient(to right bottom, #99d8b3, #31c98a);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: calc(100vh - 2 * 4vw); }
+
+h1.title {
+    display: block;
+    border-bottom: 3px dashed #C1C1C1;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 10px;
+}
+
+.jumbotron {
+    width: 100%;
+}
+
+.alert {
+    width: 100%;
+}
+
+.tools {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    visibility: hidden;
+}
+
+
+.login-form {
+    /* width: 300px; */
+    margin: 0 auto;
+    font-family: Tahoma, Geneva, sans-serif;
+    display: inline;
+}
+.login-form h1 {
+    text-align: center;
+    color: #4d4d4d;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+}
+.login-form input[type="password"],
+.login-form input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #dddddd;
+    margin-bottom: 15px;
+    box-sizing:border-box;
+}
+.login-form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+a {
+    width: 100%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    
+}
+
+
