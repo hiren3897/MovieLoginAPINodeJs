@@ -1,6 +1,7 @@
 //FILENAME : db.js
 
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 // Replace this with your MONGOURI.
 const MONGOURI = 'mongodb+srv://hiren:Hiren@54321@cluster0.qhkek.mongodb.net/Users?retryWrites=true&w=majority';
@@ -18,4 +19,4 @@ const InitiateMongoServer = async () => {
   }
 };
 
-module.exports = InitiateMongoServer;
+export default InitiateMongoServer;

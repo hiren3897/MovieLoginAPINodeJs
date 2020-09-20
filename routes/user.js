@@ -1,13 +1,22 @@
 // Filename : user.js
 
-const express = require("express");
-const { check, validationResult} = require("express-validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+//const express = require("express");
+//const { check, validationResult} = require("express-validator");
+//const bcrypt = require("bcryptjs");
+//const jwt = require("jsonwebtoken");
 const router = express.Router();
-const auth = require("../middleware/auth");
+//const auth = require("../middleware/auth");
 
-const User = require("../models/user");
+//const User = require("../models/user");
+
+import express from 'express';
+//import {check, validationResult} from 'express-validator'
+import pkg from 'express-validator';
+const {check, validationResult} = pkg;
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import auth from '../middleware/auth.js'
+import User from '../models/user.js'
 
 
 
@@ -232,4 +241,4 @@ router.get("/me", auth, async (req, res) => {
     }
   });
 
-module.exports = router;
+export default router;

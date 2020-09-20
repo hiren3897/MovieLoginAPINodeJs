@@ -2,6 +2,7 @@
   "name": "auth-login",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development",
@@ -28,7 +29,8 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
     "mongoose": "^5.10.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "node": "^14.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -36,7 +38,7 @@
     "@babel/preset-env": "^7.11.0",
     "babel-loader": "^8.1.0",
     "webpack": "^4.44.1",
-    "webpack-cli": "^2.1.5",
+    "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.11.0"
   }
 }

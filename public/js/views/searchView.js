@@ -1,4 +1,4 @@
-import { elements } from './base';
+import { elements } from './base.js';
 
 export const getInput = () => elements.searchInput.value;
 
@@ -54,11 +54,41 @@ const renderMovies = movie => {
 
 };
 
-export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+const createButton = (page, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? page - 1 : page + 1}>
+        <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+        </svg>
+        
+    </button>
+`;
+
+const renderButtons = (page, numResults, resPerPage) => {
+    const pages = Math.ceil(numResults / resPerPage);
+    let button;
+    if(page === 1 && pages > 1) {
+        button = createButton(page, 'next');
+    }
+    else if(page < pages) {
+        button = `
+        ${createButton(page, 'prev')}
+        ${createButton(page, 'next')}
+        `;
+    }
+    else if(page === pages && pages > 1) {
+        button = createButton(page, 'prev');
+    }
+
+    elements.searchResPages.insertAdjacentHTML('afterBegin', button);
+
+};
+
+
+export const renderResults = (movies, page = 1, resPerPage = 10) => {
 
     const start = (page - 1) * resPerPage;
     const end = page * resPerPage;
-    recipes.slice(start, end).forEach(renderMovies);
-
-    // renderButtons(page, recipes.length, resPerPage);
+    movies.slice(start, end).forEach(renderMovies);
+    renderButtons(page, movies.length, resPerPage);
 };

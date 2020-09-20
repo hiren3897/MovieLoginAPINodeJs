@@ -5,10 +5,14 @@ export const elements = {
     searchResultList: document.querySelector('.results__list'),
     searchRes: document.querySelector('.results'),
     searchResPages: document.querySelector('.results__pages'),
-    recipe: document.querySelector('.recipe'),
+    movie: document.querySelector('.movie'),
     shopping: document.querySelector('.shopping__list'),
     likesMenu: document.querySelector('.likes__field'),
-    likesList:document.querySelector('.likes__list')
+    likesList:document.querySelector('.likes__list'),
+    ratings: document.querySelector('.user_rating'),
+    commentTitle: document.querySelector('.ComT'),
+    commentContent: document.querySelector('.ComC'),
+    postRating: document.querySelector('.xyz')
 };
 
 export const elementStrings = {
@@ -19,7 +23,7 @@ export const renderLoader = parent => {
     const loader = `
         <div class="${elementStrings.loader}">
             <svg>
-                <use href="img/icons.svg#icon-cw"></use>
+                <use href="/img/icons.svg#icon-cw"></use>
             </svg>
         </div>
     `;
@@ -30,4 +34,3 @@ export const clearLoader = () => {
     const loader = document.querySelector(`.${elementStrings.loader}`);
     if (loader) loader.parentElement.removeChild(loader);
 }
-

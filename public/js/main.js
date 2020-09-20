@@ -1,106 +1,170 @@
+import Search from './models/search.js'
+import Movie from './models/Movie.js'
+import Likes from './models/likes.js'
+import results from './models/search.js'
+
+
+import * as searchView from './views/searchView.js'
+import * as movieView from './views/movieView.js'
+import * as likesView from './views/likeView.js'
+
+import { elements , renderLoader, clearLoader } from './views/base.js'
 const state = {};
 
-var controlSearch = (function() {
 
-    return {
-        result: function(query){
-            fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=89a5e1f5ea6cf6130b6a5c8fd4cf8605`)
-            .then(response => response.json())
-            .then(data => {
-                    state.res = data.results
-            });
-        }
-    };
+/**
+ * Search Controler
+ */
 
-})();
+const controlSearch = async () => {
+    const query = searchView.getInput();
 
-var UIController = (function() {
+    if (query) {
 
-    var DOMstrings = {
-        searchForm: document.querySelector('.search__btn'),
-        searchInput: document.querySelector('.search__field'),
-        searchResultList: document.querySelector('.results__list'),
-        searchRes: document.querySelector('.results'),
-        searchResPages: document.querySelector('.results__pages'),
-        recipe: document.querySelector('.recipe'),
-        shopping: document.querySelector('.shopping__list'),
-        likesMenu: document.querySelector('.likes__field'),
-        likesList:document.querySelector('.likes__list')
-    };
+      searchView.clearInput();
+      searchView.clearResult();
+      state.search = new Search(query);
 
-    const renderMovies = movie => {
+     
+      searchView.clearInput();
+      searchView.clearResult();
+      renderLoader(elements.searchRes);
+      
+      await state.search.getResult();
+      console.log(state.search.results)
+      clearLoader();
+      searchView.renderResults(state.search.results);
 
-        const markUp = `
-        <li>
-            <a class="results__link" href="#${movie.id}">
-                <figure class="results__fig">
-                    <img src='http://image.tmdb.org/t/p/w500/${movie.poster_path}' alt="${movie.title}">
-                </figure>
-                <div class="results__data">
-                    <h4 class="results__name">${movie.title}</h4>
-                    <p class="results__author">${movie.original_language}</p>
-                </div>
-            </a>
-        </li>
-        `;
+    }
 
-        DOMstrings.searchResultList.insertAdjacentHTML('beforeend', markUp);
-       // DOMstrings.searchResultList.insertAdjacentHTML('beforeEnd',markUp);
+ };
+
+ elements.searchForm.addEventListener('submit', e => {
+    e.preventDefault();
+    controlSearch();
+});
+
+
+/**
+ *  Movie Controler
+ */
+
+ const controlMovie = async () => {
+
+   const id =  window.location.hash.replace('#', '');
+
+   if(id) {
+
+      // Prepare the UI for changes 
+      movieView.clearMovie();
+      renderLoader(elements.movie);
+
+      //higlight
+      if(state.search){
+          searchView.highLightSelected(id);
+      }
+
+      //Create new Movie objects
+      state.movie = new Movie(id);
+
+      try {
+
+          // Get Movie data
+          await state.movie.getMovie();
+            
+
+          // Render the Movie
+          clearLoader();
+
+          movieView.renderMovie(state.movie);
+
+          
+      } catch (error) {
+          alert('something went wrong'+ error);
+          
+      }
+
+  }
+
+ };
+
+ ['load', 'hashchange'].forEach(e => window.addEventListener(e, controlMovie));
+
+ const getUserRatings = async () => {
+
+    var rat = parseInt(movieView.getRating());
+    var title = movieView.getUserRatingTitle();
+    var content = movieView.getUserRathingContent();
+    state.rating = new Movie();
+
+    await state.rating.getUserRatings(rat,title,content);
+
+ }
+
+ elements.postRating.addEventListener('click', e => {
+    getUserRatings();
+});
+
+/**
+ * LIKES CONTROLLER
+ */
+
+const controlLike = () => {
+    if (!state.likes) state.likes = new Likes();
+    const currentID = state.movie.id;
+
+    // User has NOT yet liked current Movie
+    if (!state.likes.isLiked(currentID)) {
+        // Add like to the state
+        const newLike = state.likes.addLike(
+            currentID,
+            state.movie.title,
+            state.movie.company,
+            state.movie.image
+        );
+
+        // Toggle the like button
+        likesView.toggleLikeBtn(true);
+
+        // Add like to UI list
+        likesView.renderLike(newLike);
+
+    // User HAS liked current Movie
+    } else {
+        // Remove like from the state
+        state.likes.deleteLike(currentID);
+
+        // Toggle the like button
+        likesView.toggleLikeBtn(false);
+
+        // Remove like from UI list
+        likesView.deleteLike(currentID);
+    }
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+};
+
+
+// Restore liked Movies on page load
+window.addEventListener('load', () => {
+    state.likes = new Likes();
     
-    };
+    // Restore likes
+    state.likes.readStorage();
 
-    return {
+    // Toggle like menu button
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
 
-        getInput: function() {
-            return {
-                query: DOMstrings.searchInput.value
-            }
-        },
-        getDOMStrings: function() {
-			return DOMstrings;
-        },
-
-        renderResults: (recipes, page = 1, resPerPage = 10) => {
-
-            const start = (page - 1) * resPerPage;
-            const end = page * resPerPage;
-            recipes.slice(start, end).forEach(renderMovies);
-        
-            // renderButtons(page, recipes.length, resPerPage);
-        }
-    }
+    // Render the existing likes
+    state.likes.likes.forEach(like => likesView.renderLike(like));
+});
 
 
-
-})();
-
-var controller = (function(searchCtrl, UICtrl) {
-    // const url = 'https://api.themoviedb.org/3/search/movie?query=avengers&api_key=89a5e1f5ea6cf6130b6a5c8fd4cf8605';
-
-    var setUpEventListeners = () => {
-
-        var DOM = UICtrl.getDOMStrings();
-        DOM.searchForm.addEventListener('click', searchMovie);
-    };
-
-    var searchMovie = function() {
-        var input, res;
-
-        input = UICtrl.getInput();
-        
-        searchCtrl.result(input.query);
-        UICtrl.renderResults(state.res);
-
-    }
-    return {
-        init: function() {
-            console.log("Application started");
-            setUpEventListeners();
-        }
-    };
-
-})(controlSearch, UIController);
-
-controller.init();
+elements.movie.addEventListener('click', e => {
+    if(e.target.matches('.movie__love, .movie__love *')) {
+       // call like controll
+       controlLike();
+   }
+});
+ 
 
 

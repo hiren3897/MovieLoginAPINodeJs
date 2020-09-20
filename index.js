@@ -1,23 +1,23 @@
 // File : index.js
 // mongodb+srv://product_user:Hiren@54321@productsapp.suf8l.mongodb.net/Users?retryWrites=true&w=majority
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const user = require("./routes/user"); 
-const InitiateMongoServer = require("./config/db");
-const path = require('path');
-const morgan = require('morgan');
-const exphbs = require('express-handlebars');
-const moment = require('moment');
+//const express = require("express");
+//const bodyParser = require("body-parser");
+//const user = require("./routes/user"); 
+//const InitiateMongoServer = require("./config/db");
+//const path = require('path');
+//const morgan = require('morgan');
+//const exphbs = require('express-handlebars');
+//const moment = require('moment');
 
-// import express from 'express';
-// import bodyParser from 'body-parser';
-// import user from './routes/user';
-// import InitiateMongoServer from './config/db';
-// import path from 'path';
-// import morgan from 'morgan';
-// import exphbs from 'express-handlebars';
-// import moment from 'moment';
+ import express from 'express';
+ import bodyParser from 'body-parser';
+ import user from './routes/user.js';
+ import InitiateMongoServer from './config/db.js';
+ import path from 'path';
+ import morgan from 'morgan';
+ import exphbs from 'express-handlebars';
+ import moment from 'moment';
 
 
 InitiateMongoServer();
@@ -26,7 +26,7 @@ const app = express();
 app.use(morgan('dev'));
 
 // PORT
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4000;
 
 
 // Middleware
@@ -57,8 +57,11 @@ app.set('view engine', '.hbs');
 // app.engine('handlebars', hbs.engine);
 // app.set('view engine', 'handlebars');
 
+var __dirname = path.resolve(path.dirname(''));
+const HTML_DIR = path.join(__dirname, '/public/');
+app.use(express.static(HTML_DIR));
 
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, '/public/')));
 app.use(express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use(express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free'));
